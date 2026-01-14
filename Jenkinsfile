@@ -2,34 +2,39 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+
+        stage('Clone Repository') {
             steps {
-                // Pull code from GitHub (branch master)
-                git branch: 'master', url: 'https://github.com/whodeepaksoni/gyankul-app'
+                git branch: 'master',
+                    url: 'https://github.com/yourusername/yourrepo.git'
             }
         }
 
-        stage('Deploy') {
+        stage('Remove Old index.html') {
             steps {
-                script {
-                    // Path where your web server serves files
-                    def webRoot = '/var/www/html'
+                sh '''
+                if [ -f /var/www/html/index.html ]; then
+                    rm -f /var/www/html/index.html
+                fi
+                '''
+            }
+        }
 
-                    // Copy index.html to web server root, replacing old file
-                    sh """
-                    cp -f index.html ${webRoot}/index.html
-                    """
-                }
+        stage('Copy New index.html') {
+            steps {
+                sh '''
+                cp index.html /var/www/html/index.html
+                '''
             }
         }
     }
 
     post {
         success {
-            echo "Deployment successful! index.html replaced."
+            echo "✅ index.html replaced successfully"
         }
         failure {
-            echo "Deployment failed."
+            echo "❌ Deployment failed"
         }
     }
 }
