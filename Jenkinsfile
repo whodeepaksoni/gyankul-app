@@ -6,27 +6,22 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 git branch: 'master',
-                    url: 'https://github.com/yourusername/yourrepo.git'
+                    url: 'https://github.com/whodeepaksoni/gyankul-app'
             }
         }
 
         stage('Remove Old index.html') {
             steps {
-                sh '''
-                if [ -f /var/www/html/index.html ]; then
-                    rm -f /var/www/html/index.html
-                fi
-                '''
+                sh 'sudo rm -f /var/www/html/index.html'
             }
         }
 
         stage('Copy New index.html') {
             steps {
-                sh '''
-                cp index.html /var/www/html/index.html
-                '''
+                sh 'sudo cp index.html /var/www/html/index.html'
             }
         }
+
     }
 
     post {
