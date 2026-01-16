@@ -12,13 +12,13 @@ pipeline {
 
         stage('Remove Old index.html') {
             steps {
-                sh 'sudo rm -f /var/www/html/index.html'
+                sh 'rm -f /var/www/html/index.html'
             }
         }
 
         stage('Copy New index.html') {
             steps {
-                sh 'sudo cp index.html /var/www/html/index.html'
+                sh 'cp index.html /var/www/html/index.html'
             }
         }
 
