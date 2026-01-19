@@ -3,33 +3,29 @@ pipeline {
 
     stages {
 
-        stage('Clone Repository') {
+        stage('Git Clone') {
             steps {
                 git branch: 'master',
-                    url: 'https://github.com/whodeepaksoni/gyankul-app'
+                url: 'https://github.com/whodeepaksoni/gyankul-app'
             }
         }
 
-        stage('Remove Old index.html') {
+        stage('Docker Build') {
             steps {
-                sh 'rm -f /var/www/html/index.html'
+                sh 'docker build -t my-apache-app .'
             }
         }
 
-        stage('Copy New index.html') {
+        stage('Docker Run') {
             steps {
-                sh 'cp index.html /var/www/html/index.html'
+                sh '''
+                docker rm -f apache_container || true
+                docker run -d \
+                --name apache_container \
+                -p 8081:80 \
+                my-apache-app
+                '''
             }
-        }
-
-    }
-
-    post {
-        success {
-            echo "✅ index.html replaced successfully"
-        }
-        failure {
-            echo "❌ Deployment failed"
         }
     }
 }
